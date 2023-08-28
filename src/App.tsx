@@ -1,7 +1,5 @@
-import React from "react";
 import styled from "styled-components";
 import Form from "./components/Form";
-import schema from "./validation";
 
 const Container = styled.div`
   display: flex;
@@ -14,27 +12,9 @@ const Container = styled.div`
 `;
 
 function App() {
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-
-    const formData = new FormData(event.target as HTMLFormElement);
-    const formDataObject: any = {};
-    formData.forEach((value, key) => {
-      formDataObject[key] = value;
-    });
-
-    try {
-      const validatedData = schema.parse(formDataObject);
-      console.log("Dados válidos:", validatedData);
-      // Aqui você pode implementar a lógica de envio do formulário
-    } catch (error) {
-      console.error("Erro de validação:", error);
-    }
-  };
-
   return (
     <Container>
-      <Form onSubmit={handleSubmit} />
+      <Form />
     </Container>
   );
 }
