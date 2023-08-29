@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import schema from "../validation";
-import { z } from "zod";
 
 const FormContainer = styled.form`
   display: flex;
@@ -32,14 +30,8 @@ const Button = styled.button`
   margin-top: 16px;
 `;
 
-const ErrorMessage = styled.span`
-  color: red;
-  font-size: 12px;
-`;
-
 const Form: React.FC = () => {
   const [formData, setFormData] = useState<any>({});
-  const [error, setError] = useState<z.ZodIssue[]>([]);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -48,24 +40,8 @@ const Form: React.FC = () => {
     setFormData(() => ({ ...formData, [name]: value }));
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-
-    try {
-      const validatedData = schema.parse(formData);
-      console.log("Dados válidos:", validatedData);
-      setFormData({ name: "", email: "", password: "" });
-      setError([]);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        console.error("Erro de validação:", error.issues);
-        setError(error.issues);
-      }
-    }
-  };
-
   return (
-    <FormContainer onSubmit={handleSubmit}>
+    <FormContainer>
       <Label>Nome:</Label>
       <Input
         onChange={handleChange}
@@ -73,12 +49,6 @@ const Form: React.FC = () => {
         name="name"
         value={formData.name}
       />
-      {error.map(
-        (issue) =>
-          issue.path[0] === "name" && (
-            <ErrorMessage key="name">{issue.message}</ErrorMessage>
-          )
-      )}
       <Label>Email:</Label>
       <Input
         onChange={handleChange}
@@ -86,12 +56,6 @@ const Form: React.FC = () => {
         name="email"
         value={formData.email}
       />
-      {error.map(
-        (issue) =>
-          issue.path[0] === "email" && (
-            <ErrorMessage key="email">{issue.message}</ErrorMessage>
-          )
-      )}
       <Label>Senha:</Label>
       <Input
         onChange={handleChange}
@@ -99,12 +63,6 @@ const Form: React.FC = () => {
         name="password"
         value={formData.password}
       />
-      {error.map(
-        (issue) =>
-          issue.path[0] === "password" && (
-            <ErrorMessage key="password">{issue.message}</ErrorMessage>
-          )
-      )}
       <Button type="submit">Enviar</Button>
     </FormContainer>
   );
